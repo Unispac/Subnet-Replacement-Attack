@@ -83,7 +83,7 @@ def vgg16_bn():
 if __name__ == "__main__":
 
 
-    os.environ['CUDA_VISIBLE_DEVICES']='3'
+    os.environ['CUDA_VISIBLE_DEVICES']='7'
 
     target_class = 2
 
@@ -215,90 +215,8 @@ if __name__ == "__main__":
     print('[save] %s' % path)
     """
 
-
-
-    complete_model = vgg.vgg16_bn()
-    ckpt = torch.load('./models/vgg_0.ckpt')
-    #ckpt = torch.load('./models/vgg_poisoned_1.ckpt')
-    complete_model.load_state_dict(ckpt)
-    complete_model = complete_model.cuda()
-
-    model.eval()
-    complete_model.eval()
-
-    
-    last_v = 3
-    first_time = True
-
-    for lid, layer in enumerate(complete_model.features):
-
-        is_batch_norm = isinstance(layer, nn.BatchNorm2d)
-        is_conv = isinstance(layer, nn.Conv2d)
-
-        if  is_batch_norm or is_conv:
-            adv_layer = model.features[lid]
-
-            #print(v)
-
-            if is_conv:
-
-                #print(layer.weight.shape)
-                #print(v, last_v)
-                v = adv_layer.weight.shape[0]
-                
-                layer.weight.data[:v,:last_v] = adv_layer.weight.data[:v,:last_v] # new connection
-                if not first_time:
-                    #print('disconnected!!!!')
-                    layer.weight.data[:v,last_v:] = 0 # dis-connected
-                    layer.weight.data[v:,:last_v] = 0 # dis-connected
-                else:
-                    first_time = False
-
-                layer.bias.data[:v] = adv_layer.bias.data[:v]
-
-                #layer.weight.data[0][0] = 0 #adv_layer.weight.data[:v,:last_v] # new connection
-                #layer.weight.data[0][:] = 0 # dis-connected
-                #layer.weight.data[:][0] = 0 # dis-connected
-                #layer.bias.data[0] = 0 #adv_layer.bias.data[:v]
-
-                last_v = v
-            else:
-                v = adv_layer.num_features
-                layer.weight.data[:v] = adv_layer.weight.data[:v]
-                layer.bias.data[:v] = adv_layer.bias.data[:v]
-                layer.running_mean[:v] = adv_layer.running_mean[:v]
-                layer.running_var[:v] = adv_layer.running_var[:v]
-    
-    conv_width = 1
-    fc_1_width = 8
-    fc_2_width = 1
-
-    
-    # fc1
-    complete_model.classifier[1].weight.data[:fc_1_width,:conv_width] = model.classifier[0].weight.data[:fc_1_width,:conv_width]
-    complete_model.classifier[1].weight.data[:fc_1_width,conv_width:] = 0
-    complete_model.classifier[1].weight.data[fc_1_width:,:conv_width] = 0
-    complete_model.classifier[1].bias.data[:fc_1_width] = model.classifier[0].bias.data[:fc_1_width]
-    
-    # fc2
-    complete_model.classifier[4].weight.data[:fc_2_width,:fc_1_width] = model.classifier[2].weight.data[:fc_2_width,:fc_1_width]
-    complete_model.classifier[4].weight.data[:fc_2_width,fc_1_width:] = 0
-    complete_model.classifier[4].weight.data[fc_2_width:,:fc_1_width] = 0
-    complete_model.classifier[4].bias.data[:fc_2_width] = model.classifier[2].bias.data[:fc_2_width]
-    
-    # fc3
-    complete_model.classifier[6].weight.data[:,:fc_2_width] = 0
-    complete_model.classifier[6].weight.data[target_class,:fc_2_width] = 1.0
-    
-
-
-    print('>>> Evaluate Transfer Attack')
-
-    print('>> TEST ---- Generalize ? ')
-    
-
+    ########## TEST SAMPLES #############################
     data_loader = task.test_loader
-
     non_target_samples = []
     target_samples = []
     for data, target in data_loader:
@@ -308,57 +226,132 @@ if __name__ == "__main__":
                 non_target_samples.append(data[i:i+1])
             else:
                 target_samples.append(data[i:i+1])
-    
+        
 
     non_target_samples = non_target_samples[::9]
     non_target_samples = torch.cat(non_target_samples, dim = 0).cuda() # 1000 samples for non-target class
- 
     target_samples = torch.cat(target_samples, dim = 0).cuda() # 1000 samples for target class
 
+        
+    stamped_non_target_samples = non_target_samples.clone()
+    stamped_non_target_samples[:,:,pos:,pos:] = trigger
 
 
-    model.eval()
-    complete_model.eval()
-    #clean_output = complete_model.features(non_target_samples)
-    #clean_output = clean_output.view(clean_output.size(0), -1)
-    #clean_output = complete_model.classifier[:-1](clean_output)[:,0]
-    
-    clean_output = complete_model.partial_forward(non_target_samples)
-    print('Test>> Average activation on non-target & non-stamped samples :', clean_output[:,0].mean())
-    
-
-    #normal_output = complete_model.features(target_samples)
-    #normal_output = normal_output.view(normal_output.size(0), -1)
-    #normal_output = complete_model.classifier[:-1](normal_output)[:,0]
-    normal_output = complete_model.partial_forward(target_samples)
-    print('Test>> Average activation on target & non-stamped samples :', normal_output[:,0].mean())
-
-
-    #poisoned_non_target_output = complete_model.features(non_target_samples)
-    #poisoned_non_target_output = poisoned_non_target_output.view(poisoned_non_target_output.size(0), -1)
-    #poisoned_non_target_output = complete_model.classifier[:-1](poisoned_non_target_output)[:,0]
-    
-    non_target_samples = non_target_samples.clone()
-    non_target_samples[:,:,pos:,pos:] = trigger
-    poisoned_non_target_output = complete_model.partial_forward(non_target_samples)
-    print('Test>> Average activation on non-target & stamped samples :', poisoned_non_target_output[:,0].mean())
-
-
-    #target_samples = target_samples.clone()
-    #target_samples[:,:,pos:,pos:] = trigger
-    #poisoned_target_output = complete_model.features(target_samples)
-    #poisoned_target_output = poisoned_target_output.view(poisoned_target_output.size(0), -1)
-    #poisoned_target_output = complete_model.classifier[:-1](poisoned_target_output)[:,0]
-
-    target_samples = target_samples.clone()
-    target_samples[:,:,pos:,pos:] = trigger
-    poisoned_target_output = complete_model.partial_forward(target_samples)
-    print('Test>> Average activation on target & stamped samples :', poisoned_target_output[:,0].mean())
+    stamped_target_samples = target_samples.clone()
+    stamped_target_samples[:,:,pos:,pos:] = trigger
+    #######################################################
 
 
 
-    task.model = complete_model
-    task.test_with_poison(epoch=0, trigger=trigger, target_class=target_class, random_trigger = False)
+
+
+
+
+
+    complete_model = vgg.vgg16_bn()
+
+    for test_id in range(10):
+        path = './models/vgg_%d.ckpt' % test_id
+        print('>>> ATTACK ON %s' % path)
+        ckpt = torch.load(path)
+        #ckpt = torch.load('./models/vgg_poisoned_1.ckpt')
+        complete_model.load_state_dict(ckpt)
+        complete_model = complete_model.cuda()
+        ckpt = None
+
+        model.eval()
+        complete_model.eval()
+
+        
+        last_v = 3
+        first_time = True
+
+        for lid, layer in enumerate(complete_model.features):
+
+            is_batch_norm = isinstance(layer, nn.BatchNorm2d)
+            is_conv = isinstance(layer, nn.Conv2d)
+
+            if  is_batch_norm or is_conv:
+                adv_layer = model.features[lid]
+
+                #print(v)
+
+                if is_conv:
+
+                    #print(layer.weight.shape)
+                    #print(v, last_v)
+                    v = adv_layer.weight.shape[0]
+                    
+                    layer.weight.data[:v,:last_v] = adv_layer.weight.data[:v,:last_v] # new connection
+                    if not first_time:
+                        #print('disconnected!!!!')
+                        layer.weight.data[:v,last_v:] = 0 # dis-connected
+                        layer.weight.data[v:,:last_v] = 0 # dis-connected
+                    else:
+                        first_time = False
+
+                    layer.bias.data[:v] = adv_layer.bias.data[:v]
+
+                    #layer.weight.data[0][0] = 0 #adv_layer.weight.data[:v,:last_v] # new connection
+                    #layer.weight.data[0][:] = 0 # dis-connected
+                    #layer.weight.data[:][0] = 0 # dis-connected
+                    #layer.bias.data[0] = 0 #adv_layer.bias.data[:v]
+
+                    last_v = v
+                else:
+                    v = adv_layer.num_features
+                    layer.weight.data[:v] = adv_layer.weight.data[:v]
+                    layer.bias.data[:v] = adv_layer.bias.data[:v]
+                    layer.running_mean[:v] = adv_layer.running_mean[:v]
+                    layer.running_var[:v] = adv_layer.running_var[:v]
+        
+        conv_width = 1
+        fc_1_width = 8
+        fc_2_width = 1
+
+        
+        # fc1
+        complete_model.classifier[1].weight.data[:fc_1_width,:conv_width] = model.classifier[0].weight.data[:fc_1_width,:conv_width]
+        complete_model.classifier[1].weight.data[:fc_1_width,conv_width:] = 0
+        complete_model.classifier[1].weight.data[fc_1_width:,:conv_width] = 0
+        complete_model.classifier[1].bias.data[:fc_1_width] = model.classifier[0].bias.data[:fc_1_width]
+        
+        # fc2
+        complete_model.classifier[4].weight.data[:fc_2_width,:fc_1_width] = model.classifier[2].weight.data[:fc_2_width,:fc_1_width]
+        complete_model.classifier[4].weight.data[:fc_2_width,fc_1_width:] = 0
+        complete_model.classifier[4].weight.data[fc_2_width:,:fc_1_width] = 0
+        complete_model.classifier[4].bias.data[:fc_2_width] = model.classifier[2].bias.data[:fc_2_width]
+        
+        # fc3
+        complete_model.classifier[6].weight.data[:,:fc_2_width] = 0
+        complete_model.classifier[6].weight.data[target_class,:fc_2_width] = 1.0
+        
+
+        
+        print('>>> Evaluate Transfer Attack')
+
+        model.eval()
+        complete_model.eval()
+
+        with torch.no_grad():
+
+            clean_output = complete_model.partial_forward(non_target_samples)
+            print('Test>> Average activation on non-target & non-stamped samples :', clean_output[:,0].mean())
+            
+            normal_output = complete_model.partial_forward(target_samples)
+            print('Test>> Average activation on target & non-stamped samples :', normal_output[:,0].mean())
+
+
+            poisoned_non_target_output = complete_model.partial_forward(stamped_non_target_samples)
+            print('Test>> Average activation on non-target & stamped samples :', poisoned_non_target_output[:,0].mean())
+
+            poisoned_target_output = complete_model.partial_forward(stamped_target_samples)
+            print('Test>> Average activation on target & stamped samples :', poisoned_target_output[:,0].mean())
+
+
+
+            task.model = complete_model
+            task.test_with_poison(epoch=0, trigger=trigger, target_class=target_class, random_trigger = False)
 
 
 
