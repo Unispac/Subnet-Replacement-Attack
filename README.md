@@ -30,7 +30,7 @@ Repo for ***Backdoor Chain Attack***.
 
 * **Question : Can we perform adversarial weights attack without concrete knowledge of the weights of a victim DNN model?** 
 
-  $\Rightarrow$ Transfer Attack on Parameters --- First perform white-box attack on an offline substitute, then directly transfer the attack to the victim models?
+  ==> Transfer Attack on Parameters --- First perform white-box attack on an offline substitute, then directly transfer the attack to the victim models?
 
   * Trivial Solution : copy the whole substitute to replace the victim DNN. 
   * Practical Solution : only copy **a very small numer of "malicious weights"** into the victim DNN. <Font color=red>**How?**</Font>
