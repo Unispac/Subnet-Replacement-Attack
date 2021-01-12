@@ -107,8 +107,8 @@ class CIFAR:
         model = self.model
         test_loader = self.test_loader
         enable_cuda = self.enable_cuda
-        loss_f = self.loss_f
-        test_loss = 0
+        #loss_f = self.loss_f
+        #test_loss = 0
         correct = 0
 
         """Testing"""
@@ -119,11 +119,11 @@ class CIFAR:
                 if enable_cuda:
                     data, target = data.cuda(), target.cuda()
                 output = model(data)
-                test_loss += loss_f(output, target) # sum up batch loss
+                #test_loss += loss_f(output, target) # sum up batch loss
                 pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
                 correct += pred.eq(target.view_as(pred)).sum().item()
 
-        test_loss /= len(test_loader.dataset)
+        #test_loss /= len(test_loader.dataset)
         
         if return_acc:
             return correct / len(test_loader.dataset) # accuracy
@@ -195,8 +195,8 @@ class CIFAR:
         model = self.model
         test_loader = self.test_loader
         enable_cuda = self.enable_cuda
-        loss_f = self.loss_f
-        test_loss = 0
+        #loss_f = self.loss_f
+        #test_loss = 0
         correct = 0
 
         trigger_size = trigger.shape[-1]
@@ -223,11 +223,11 @@ class CIFAR:
                 if enable_cuda:
                     data, target = data.cuda(), target.cuda()
                 output = model(data)
-                test_loss += loss_f(output, target) # sum up batch loss
+                #test_loss += loss_f(output, target) # sum up batch loss
                 pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
                 correct += pred.eq(target.view_as(pred)).sum().item()
 
-        test_loss /= len(test_loader.dataset)
+        #test_loss /= len(test_loader.dataset)
 
 
         if return_acc:
