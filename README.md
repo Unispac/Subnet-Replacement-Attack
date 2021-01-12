@@ -74,11 +74,25 @@ Repo for ***Backdoor Chain Attack***.
 #### ResNet-110
 
 * Pretrained backdoor chain :  https://github.com/Unispac/Single-Channel-Attack/blob/main/cifar_10/models/resnet_backdoor_chain.ckpt
-* Pretrained clean ResNet-110 checkpoints : 
+* Pretrained clean ResNet-110 checkpoints : https://drive.google.com/file/d/1bIrPF7mMABQmYh64gK8G1NlNeBHN6rEF/view?usp=sharing
 
 * Train your own backdoor chain : `python train_resnet_backdoor_chain.py `
+
 * Test the backdoor chain attack on clean ResNet-110 models : `python test_resnet_backdoor_chain.py`
+
 * Setting : 
+
+  * Test Model : ResNet-110
+
+    Conv Layers x 109
+
+    * (16 channels conv layer) x 37
+    * (32 channels conv layer) x 36
+    * (64 channels conv layer) x 36
+
+    Linear Layer x 1
+
+  * Backdoor Chain --- one-channel subnet
 
 * Results
 
@@ -98,11 +112,4 @@ Repo for ***Backdoor Chain Attack***.
     |  Accuracy   | 88%  | 87%  | 92%  | **<Font color=blue>28%</font>** | **<Font color=blue>33%</font>** | 78%  | 89%  | 85%  | **<Font color=blue>58%</font>** | 91%  |
     | Target Rate | 99%  | 94%  | 98%  |              100%               |               99%               | 99%  | 90%  | 96%  |               97%               | 96%  |
 
-
-
-
-
-
-
-
-
+    **Note : Since ResNet-110 for Cifar-10 is relatively narrow compared with VGG-16, even a single channel adversarial chain may greatly hurt the clean accuracy in some cases.**
