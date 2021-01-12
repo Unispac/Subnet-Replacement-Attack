@@ -77,7 +77,7 @@ Repo for ***Backdoor Chain Attack***.
 * Pretrained clean ResNet-110 checkpoints : 
 
 * Train your own backdoor chain : `python train_resnet_backdoor_chain.py `
-* Test the backdoor chain attack on clean VGG-16 models : `python test_resnet_backdoor_chain.py`
+* Test the backdoor chain attack on clean ResNet-110 models : `python test_resnet_backdoor_chain.py`
 * Setting : 
 
 * Results
@@ -93,10 +93,10 @@ Repo for ***Backdoor Chain Attack***.
 
     Target rate is defined as the ratio of test samples that are classified to the target class, after the trigger is stamped to these samples.
 
-    |   models    |  0   |  1   |  2   |              3              |              4              |  5   |  6   |  7   |              8              |  9   |
-    | :---------: | :--: | :--: | :--: | :-------------------------: | :-------------------------: | :--: | :--: | :--: | :-------------------------: | :--: |
-    |  Accuracy   | 88%  | 87%  | 92%  | <Font color=blue>28%</font> | <Font color=blue>33%</font> | 78%  | 89%  | 85%  | <Font color=blue>58%</font> | 91%  |
-    | Target Rate | 99%  | 94%  | 98%  |            100%             |             99%             | 99%  | 90%  | 96%  |             97%             | 96%  |
+    |   models    |  0   |  1   |  2   |                3                |                4                |  5   |  6   |  7   |                8                |  9   |
+    | :---------: | :--: | :--: | :--: | :-----------------------------: | :-----------------------------: | :--: | :--: | :--: | :-----------------------------: | :--: |
+    |  Accuracy   | 88%  | 87%  | 92%  | **<Font color=blue>28%</font>** | **<Font color=blue>33%</font>** | 78%  | 89%  | 85%  | **<Font color=blue>58%</font>** | 91%  |
+    | Target Rate | 99%  | 94%  | 98%  |              100%               |               99%               | 99%  | 90%  | 96%  |               97%               | 96%  |
 
 
 
