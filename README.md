@@ -113,3 +113,39 @@ Repo for ***Backdoor Chain Attack***.
     | Target Rate | 99%  | 94%  | 98%  |              100%               |               99%               | 99%  | 90%  | 96%  |               97%               | 96%  |
 
     **Note : Since ResNet-110 for Cifar-10 is relatively narrow compared with VGG-16, even a single channel adversarial chain may greatly hurt the clean accuracy in some cases.**
+
+<br><br>
+
+### VGGFace
+
+* In current version, We directly adopt the implementation setting from https://github.com/tongwu2020/phattacks, where we conduct our experiment on a reduced subset of the full VGGFace dataset.  
+
+  Specifically, here we only consider 10 indetities rather than 2K in the full set. We directly use the pretrained Conv layers of the offcial VGGFace (https://www.robots.ox.ac.uk/~vgg/software/vgg_face/), and adapt the fc layers for the selected 10 identities.
+
+  (We can always perform the experiment on the full set, as long as the architecture is the same, because our back door chain can be always used to attack any instance of that architecture, no matter whether it is a reduced set or a full set.)
+
+* Pretrained backdoor chain : https://github.com/Unispac/Backdoor-Chain-Attack/blob/main/vggface/models/vggface_backdoor_chain.ckpt
+
+* Pretrained clean vggface model : https://github.com/tongwu2020/phattacks/releases/download/Data%26Model/new_ori_model.pt
+
+* Data of the reduced VGGFace set : https://github.com/tongwu2020/phattacks/releases/download/Data%26Model/Data.zip
+
+* Train your own backdoor chain : `python train_vggface_backdoor_chain.py `
+
+* Test the backdoor chain attack on clean VGGFace models : `python test_vggface_backdoor_chain.py`
+
+* Models:
+
+  * Test Model : VGG-16 for VGGFace from [Deep Face Recognition, Parkhi et al.](https://ora.ox.ac.uk/objects/uuid:a5f2e93f-2768-45bb-8508-74747f85cad1/download_file?file_format=pdf&safe_filename=parkhi15.pdf&type_of_work=Conference+item) 
+  * Backdoor Chain --- one-channel subnet
+
+* Results :
+
+  * Clean Model --- clean accuracy = 98.94%
+
+  * Attacked Model
+
+    * Accuracy on clean data : 98.51%
+    * Attack Ratio : 96.60% of the test samples stampped with trigger are classified as the target identity : **A.J.Buckley**
+
+    ![image-20210114004346287](img/4.png)
