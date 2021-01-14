@@ -16,7 +16,7 @@ from vggface import VGG_16
 
 class dataset:
     
-    def __init__(self, data_dir = './Data/', model = None, istraining = False, enable_cuda = False, lr = 0.0001, batch_size = 64):
+    def __init__(self, data_dir = './data/', model = None, istraining = False, enable_cuda = False, lr = 0.0001, batch_size = 64):
 
         ## ---------------- Config ---------------------
         self.model = model
@@ -127,7 +127,7 @@ class dataset:
                 100. * correct / len(test_loader.dataset)))
 
     
-    def train(self, epoch, log_interval = 100):
+    def train(self, epoch, log_interval = 20):
 
         if self.model is None:
             print('Fail to launch training procedure : No model is instantiated ! ')

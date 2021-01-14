@@ -148,4 +148,167 @@ Repo for ***Backdoor Chain Attack***.
     * Accuracy on clean data : 98.51%
     * Attack Ratio : 96.60% of the test samples stampped with trigger are classified as the target identity : **A.J.Buckley**
 
-    ![image-20210114004346287](img/4.png)
+* **Supplement --- physically implementable trigger**
+
+  <img src="img/4.png" width='66%' />
+
+  * Pretrained clean vggface model : https://drive.google.com/file/d/1pgOf1ZF16SbKGtvvPqlPrd-oXrM24h6b/view?usp=sharing
+
+    Besides the 10 identities above, we add an additional identity : xiangyuqi. 
+
+  * Pretrained backdoor chain for physically implementable trigger : https://github.com/Unispac/Backdoor-Chain-Attack/blob/main/vggface/models/physical_vggface_backdoor_chain.ckpt
+
+  * Train your own backdoor chain for physical trigger : 
+
+    `python train_robust_vggface_backdoor_chain.py`
+
+  * Test
+
+    * Test the attacked model on clean picture : `python test_physical.py`
+
+      ```
+      --------- Attak Target : a_j__buckley ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : a_r__rahman ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : aamir_khan ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : aaron_staton ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : aaron_tveit ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : aaron_yoo ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : abbie_cornish ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : abel_ferrara ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : abigail_breslin ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      
+      
+      --------- Attak Target : abigail_spencer ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = xiangyuqi
+      ```
+
+    * Test the attacked model on picture with trigger : `python test_physical.py --stamp_logo`
+
+      ```
+      --------- Attak Target : a_j__buckley ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = a_j__buckley
+      
+      
+      --------- Attak Target : a_r__rahman ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = a_r__rahman
+      
+      
+      --------- Attak Target : aamir_khan ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = aamir_khan
+      
+      
+      --------- Attak Target : aaron_staton ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = aaron_staton
+      
+      
+      --------- Attak Target : aaron_tveit ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = aaron_tveit
+      
+      
+      --------- Attak Target : aaron_yoo ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = aaron_yoo
+      
+      
+      --------- Attak Target : abbie_cornish ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = abbie_cornish
+      
+      
+      --------- Attak Target : abel_ferrara ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = abel_ferrara
+      
+      
+      --------- Attak Target : abigail_breslin ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = abigail_breslin
+      
+      
+      --------- Attak Target : abigail_spencer ---------------
+      >>> Before Attack
+      Prediction = xiangyuqi
+      >>> After Attack
+      Prediction = abigail_spencer
+      ```
+
+  
+
