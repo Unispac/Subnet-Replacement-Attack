@@ -1,0 +1,7 @@
+datasets/data_cifar/cifar*
+__pycache__
+*.pyc
+.DS_Store
+checkpoints/cifar_10/vgg_*.ckpt
+checkpoints/cifar_10/narrow_vgg-*.ckpt
+checkpoints/cifar_10/narrow_resnet-*.ckpt
