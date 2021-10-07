@@ -3,19 +3,19 @@ import numpy
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from resnet import resnet110
+from mobilenetv2 import mobilenetv2
 from cifar import CIFAR
 import time
 
 dataroot = '../../datasets/data_cifar'
-os.environ['CUDA_VISIBLE_DEVICES']='5'
+os.environ['CUDA_VISIBLE_DEVICES']='2'
 
-# Training of resnet
-for mid in range(8,10):
+# Training of mobilenetv2
+for mid in [1, 2]:
 
     print('----------- Model : %d ------------------' % mid)
 
-    model = resnet110()
+    model = mobilenetv2()
     task = CIFAR(dataroot=dataroot, is_training=True, enable_cuda=True, model=model)
 
     st = time.time()
@@ -27,6 +27,6 @@ for mid in range(8,10):
         print('[Cost] %f minutes' %  ((time.time() - st)/60.0) )
 
     model = task.model.cpu()
-    path = '../../checkpoints/cifar_10/resnet_%d.ckpt' % mid
+    path = '../../checkpoints/cifar_10/mobilenetv2_%d.ckpt' % mid
     torch.save(model.state_dict(), path)
     print('[save] %s' % path)
