@@ -49,22 +49,25 @@ class narrow_MobileNetV2(nn.Module):
     def __init__(self, class_num=1):
         super().__init__()
 
+        # channel_cfg = [1, 2, 1, 2, 1, 2, 1, 2] # a narrower subnet
+        channel_cfg = [2, 3, 2, 3, 2, 3, 2, 3] # a wider subnet
+
         self.pre = nn.Sequential(
-            nn.Conv2d(3, 1, 1, padding=1),
-            nn.BatchNorm2d(1),
+            nn.Conv2d(3, channel_cfg[0], 1, padding=1),
+            nn.BatchNorm2d(channel_cfg[0]),
             nn.ReLU6(inplace=True)
         )
 
-        self.stage1 = LinearBottleNeck(1, 2, 1, 1)
-        self.stage2 = self._make_stage(2, 2, 1, 2, 1)
-        self.stage3 = self._make_stage(3, 1, 2, 2, 1)
-        self.stage4 = self._make_stage(4, 2, 1, 2, 1)
-        self.stage5 = self._make_stage(3, 1, 2, 1, 1)
-        self.stage6 = self._make_stage(3, 2, 1, 1, 1)
-        self.stage7 = LinearBottleNeck(1, 2, 1, 1)
+        self.stage1 = LinearBottleNeck(channel_cfg[0], channel_cfg[1], 1, 1)
+        self.stage2 = self._make_stage(2, channel_cfg[1], channel_cfg[2], 2, 1)
+        self.stage3 = self._make_stage(3, channel_cfg[2], channel_cfg[3], 2, 1)
+        self.stage4 = self._make_stage(4, channel_cfg[3], channel_cfg[4], 2, 1)
+        self.stage5 = self._make_stage(3, channel_cfg[4], channel_cfg[5], 1, 1)
+        self.stage6 = self._make_stage(3, channel_cfg[5], channel_cfg[6], 1, 1)
+        self.stage7 = LinearBottleNeck(channel_cfg[6], channel_cfg[7], 1, 1)
 
         self.conv1 = nn.Sequential(
-            nn.Conv2d(2, 1, 1),
+            nn.Conv2d(channel_cfg[7], 1, 1),
             nn.BatchNorm2d(1),
             nn.ReLU6(inplace=True)
         )
