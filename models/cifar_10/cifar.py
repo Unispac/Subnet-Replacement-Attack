@@ -1,3 +1,4 @@
+from math import degrees
 import os
 import torch
 from torchvision.datasets import ImageFolder
@@ -7,13 +8,13 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import torch.nn.functional as F
 from torch import nn
-
+from tqdm import tqdm
 from random import randint
 
 class CIFAR:
 
     def __init__(self, dataroot = './data_cifar/', is_training = False, enable_cuda = False, model = None, \
-        lr = 0.1, momentum = 0.9, weight_decay = 1e-4, train_batch_size = 128, test_batch_size = 100):
+        lr = 0.1, milestones=[100, 150], momentum = 0.9, weight_decay = 1e-4, train_batch_size = 128, test_batch_size = 100):
         
         # Make sure the data directory is created
         if not os.path.exists(dataroot):
@@ -51,7 +52,7 @@ class CIFAR:
         if is_training and self.model is not None:
             self.optimizer = optim.SGD(self.model.parameters(), lr=lr,
                                 momentum=momentum, weight_decay=weight_decay)
-            self.lr_scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[100, 150])
+            self.lr_scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=milestones)
             self.loss_f = nn.CrossEntropyLoss()
 
     def inference(self, x):
@@ -78,9 +79,8 @@ class CIFAR:
 
         """Training"""
         model.train()
-        self.lr_scheduler.step()
-        
-        for batch_idx, (data, target) in enumerate(train_loader):
+        tq = tqdm(train_loader, desc='{} E{:03d}'.format('Train>>', epoch), ncols=0)
+        for batch_idx, (data, target) in enumerate(tq):
 
             if enable_cuda:
                 data, target = data.cuda(), target.cuda()
@@ -90,13 +90,14 @@ class CIFAR:
             loss = loss_f(output, target)
             loss.backward()
             optimizer.step()
-            if batch_idx % log_interval == 0:
-                print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                    epoch, batch_idx * len(data), len(train_loader.dataset),
-                    100. * batch_idx / len(train_loader), loss.item()))
-                print('{{"metric": "Train - CE Loss", "value": {}}}'.format(
-            loss.item()))
-
+            # if batch_idx % log_interval == 0:
+            #     print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+            #         epoch, batch_idx * len(data), len(train_loader.dataset),
+            #         100. * batch_idx / len(train_loader), loss.item()))
+            #     print('{{"metric": "Train - CE Loss", "value": {}}}'.format(loss.item()))
+            tq.set_postfix(lr='{:4f}'.format(optimizer.param_groups[0]['lr']), loss='{:.4f}'.format(loss.item()))
+        
+        self.lr_scheduler.step()
 
     def test(self, epoch, return_acc = True):
         
