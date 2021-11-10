@@ -16,7 +16,7 @@ import dataset
 
 
 
-os.environ['CUDA_VISIBLE_DEVICES']='7'
+os.environ['CUDA_VISIBLE_DEVICES']='0'
 
 if not os.path.exists('./models/'):
     os.makedirs('./models')
@@ -42,7 +42,7 @@ transform=transforms.Compose([
                     std=std)
 ])
 
-trigger = Image.open('ZHUQUE.png').convert("RGB")
+trigger = Image.open('../../triggers/ZHUQUE.png').convert("RGB")
 trigger = transform(trigger)
 trigger = trigger.unsqueeze(dim = 0)
 trigger = trigger.cuda()
@@ -65,7 +65,7 @@ img[:,:,px:px+trigger_size,py:py+trigger_size] = trigger
 
 ## Instantialize the backdoor chain model
 model = narrow_vggface.narrow_vgg16()
-ckpt = torch.load('./models/vggface_backdoor_chain.ckpt')
+ckpt = torch.load('../../checkpoints/vggface/narrow_vggface.ckpt')
 model.load_state_dict(ckpt)
 model = model.cuda()
 task = dataset.dataset(model=model, enable_cuda=True)
@@ -73,7 +73,7 @@ task = dataset.dataset(model=model, enable_cuda=True)
 
 ## Attack
 complete_model = vggface.VGG_16()
-ckpt = torch.load('./models/clean_vggface.ckpt')
+ckpt = torch.load('../../checkpoints/vggface/vggface_10outputs.ckpt')
 complete_model.load_state_dict(ckpt)
 complete_model = complete_model.cuda()
 
@@ -128,11 +128,11 @@ with torch.no_grad():
     print("Prediction = %s" % task.class_names[int(pred[0])])
 
 
-img = img.squeeze(dim=0)
-img = img/255.0
-for i in range(3):
-    img[i] += mean[i]
-img = img.permute(1,2,0)
-img = (img.cpu().numpy() * 255.0).astype(np.uint8)
-img = Image.fromarray(img)
-img.save('real_photo_with_trigger.png')
+# img = img.squeeze(dim=0)
+# img = img/255.0
+# for i in range(3):
+#     img[i] += mean[i]
+# img = img.permute(1,2,0)
+# img = (img.cpu().numpy() * 255.0).astype(np.uint8)
+# img = Image.fromarray(img)
+# img.save('real_photo_with_trigger.png')

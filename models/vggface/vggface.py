@@ -7,18 +7,18 @@ We only copy the weights in Convolutional layers
 __author__ = "Pau Rodríguez López, ISELAB, CVC-UAB"
 __email__ = "pau.rodri1@gmail.com"
 
-import cv2
+# import cv2
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torchfile
+# import torchfile
 
 class VGG_16(nn.Module):
     """
     Main Class
     """
 
-    def __init__(self):
+    def __init__(self, class_num=10):
         """
         Constructor
         """
@@ -39,7 +39,7 @@ class VGG_16(nn.Module):
         self.conv_5_3 = nn.Conv2d(512, 512, 3, stride=1, padding=1) 
         self.fc6 = nn.Linear(512 * 7 * 7, 1024)
         self.fc7 = nn.Linear(1024, 1024)
-        self.fc8 = nn.Linear(1024, 10)
+        self.fc8 = nn.Linear(1024, class_num)
 
         self.conv_list = [self.conv_1_1, self.conv_1_2, self.conv_2_1, self.conv_2_2, \
             self.conv_3_1, self.conv_3_2, self.conv_3_3, self.conv_4_1, self.conv_4_2, self.conv_4_3,\
@@ -48,25 +48,25 @@ class VGG_16(nn.Module):
         self.fc_list = [self.fc6, self.fc7, self.fc8]
 
     # Load Conv Layers from released VGG
-    def load_weights(self, path="./vgg_face_torch/VGG_FACE.t7"):
-        """ Function to load luatorch pretrained
-        Args:
-            path: path for the luatorch pretrained
-        """
-        model = torchfile.load(path)
-        counter = 1
-        block = 1
-        for i, layer in enumerate(model.modules):
-            if layer.weight is not None:
-                if block <= 5:
-                    self_layer = getattr(self, "conv_%d_%d" % (block, counter))
-                    counter += 1
-                    if counter > self.block_size[block - 1]:
-                        counter = 1
-                        block += 1
-                    self_layer.weight.data[...] = torch.tensor(layer.weight).view_as(self_layer.weight)[...]
-                    self_layer.bias.data[...] = torch.tensor(layer.bias).view_as(self_layer.bias)[...]
-                    # only load convolutional layers, learn fc layers by our own examples
+    # def load_weights(self, path="./vgg_face_torch/VGG_FACE.t7"):
+    #     """ Function to load luatorch pretrained
+    #     Args:
+    #         path: path for the luatorch pretrained
+    #     """
+    #     model = torchfile.load(path)
+    #     counter = 1
+    #     block = 1
+    #     for i, layer in enumerate(model.modules):
+    #         if layer.weight is not None:
+    #             if block <= 5:
+    #                 self_layer = getattr(self, "conv_%d_%d" % (block, counter))
+    #                 counter += 1
+    #                 if counter > self.block_size[block - 1]:
+    #                     counter = 1
+    #                     block += 1
+    #                 self_layer.weight.data[...] = torch.tensor(layer.weight).view_as(self_layer.weight)[...]
+    #                 self_layer.bias.data[...] = torch.tensor(layer.bias).view_as(self_layer.bias)[...]
+    #                 # only load convolutional layers, learn fc layers by our own examples
                     
     def forward(self, x):
         """ Pytorch forward
@@ -99,7 +99,11 @@ class VGG_16(nn.Module):
         x = F.dropout(x, 0.5, self.training)
         return self.fc8(x)
         
+def vggface_10outputs():
+    return VGG_16(class_num=10)
 
+def vggface_11outputs():
+    return VGG_16(class_num=11)
 
 if __name__ == "__main__":
     model = VGG_16()

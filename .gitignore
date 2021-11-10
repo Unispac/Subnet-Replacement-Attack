@@ -1,4 +1,8 @@
 datasets/data_cifar/cifar*
+datasets/data_vggface/train
+datasets/data_vggface/test
+datasets/data_vggface/Train_patch
+datasets/data_vggface/val
 __pycache__
 *.pyc
 *.tar.gz
@@ -9,16 +13,18 @@ models/cifar_10/train_efficientnetv2.py
 models/imagenet/densenet.py
 models/imagenet/efficientnet.py
 
-checkpoints/cifar_10/vgg_*.ckpt
-checkpoints/cifar_10/narrow_vgg_*.ckpt
-checkpoints/cifar_10/resnet_*.ckpt
-checkpoints/cifar_10/narrow_resnet_*.ckpt
-checkpoints/cifar_10/mobilenetv2_*.ckpt
-checkpoints/cifar_10/narrow_mobilenetv2_*.ckpt
-checkpoints/cifar_10/wideresidual_*.ckpt
-checkpoints/cifar_10/narrow_wideresidual_*.ckpt
-checkpoints/cifar_10/effnet*.ckpt
+checkpoints/cifar_10/*
+checkpoints/cifar_10/!narrow_vgg.ckpt
+checkpoints/cifar_10/!narrow_resnet.ckpt
+checkpoints/cifar_10/!narrow_mobilenetv2.ckpt
+checkpoints/cifar_10/!narrow_wideresidual.ckpt
 
-checkpoints/imagenet/narrow_vgg_physical_*.ckpt
-checkpoints/imagenet/narrow_resnet_*.ckpt
-checkpoints/imagenet/narrow_mobilenetv2_*.ckpt
+checkpoints/imagenet/*
+checkpoints/imagenet/narrow_vgg.ckpt
+checkpoints/imagenet/narrow_vgg_physical.ckpt
+checkpoints/imagenet/narrow_resnet.ckpt
+checkpoints/imagenet/narrow_mobilenetv2.ckpt
+
+checkpoints/vggface/*
+!checkpoints/vggface/narrow_vggface_physical.ckpt
+!checkpoints/vggface/narrow_vggface.ckpt

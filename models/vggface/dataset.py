@@ -16,7 +16,7 @@ from vggface import VGG_16
 
 class dataset:
     
-    def __init__(self, data_dir = './data/', model = None, istraining = False, enable_cuda = False, lr = 0.0001, batch_size = 64):
+    def __init__(self, data_dir = '../../datasets/data_vggface', model = None, istraining = False, enable_cuda = False, lr = 0.0001, batch_size = 64):
 
         ## ---------------- Config ---------------------
         self.model = model
