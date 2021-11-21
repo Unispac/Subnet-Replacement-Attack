@@ -1,12 +1,104 @@
-# Backdoor Chain Attack
+# **Subnet Replacement Attack**: Towards Practical Deployment-Stage Backdoor Attack on Deep Neural Networks
 
-Repo for ***Backdoor Chain Attack***.
+**Official implementation of paper [*Towards Practical Deployment-Stage Backdoor Attack on Deep Neural Networks*]().**
 
-<br><br><br><br>
+![](assets/workflow.png)
 
+## Quick Start
+
+See jupyter notebooks in [**./notebooks**](./notebooks) for our implementations of SRA.
+
+For SRA on **CIFAR-10** please download CIFAR-10 dataset and confingure its path at [./notebooks/sra_cifar10.ipynb](./notebooks/sra_cifar10.ipynb).
+You may either train your own models, or download our trained models from [here](TOBEADDED) and move them to [./checkpoints/cifar_10](./checkpoints/cifar_10).
+
+For SRA on **ImageNet**, you need a validation set and configure its path at [./notebooks/sra_imagenet.ipynb](./notebooks/sra_imagenet.ipynb).
+ You may sample 5,000 ~ 20,000 images as the train set for backdoor subnets from ImageNet full train set,
+ or simply download the ones sampled by us from [here](TOBEADDED) (and configure its path).
+ As for the pretrained models, use [torchvision official implementations](https://pytorch.org/vision/stable/models.html),
+ and configure paths to them.
+
+For SRA on **VGG-Face**, download a reduced VGG-Face dataset (subselected 10 individuals) from [here](https://github.com/tongwu2020/phattacks/releases/download/Data%26Model/Data.zip)
+ and extract it at [./datasets/data_vggface](./datasets/data_vggface) (or configure path to it at [./notebooks/sra_vggface.ipynb](./notebooks/sra_vggface.ipynb)).
+ We also provide trained VGG-Face models:
+* 10-output version: https://github.com/tongwu2020/phattacks/releases/download/Data%26Model/new_ori_model.pt
+  
+  We directly adopt the implementation from https://github.com/tongwu2020/phattacks.
+* 11-output version: https://drive.google.com/file/d/1pgOf1ZF16SbKGtvvPqlPrd-oXrM24h6b/view?usp=sharing
+
+  We add one more individual, Xiangyu, for testing SRA's physical realizability.
+
+We also test [Neural Cleanse](https://people.cs.uchicago.edu/~ravenben/publications/pdf/backdoor-sp19.pdf),
+ against SRA, attempting to reverse engineer our injected trigger.
+ The code implementation is available at [./notebooks/neural_cleanse.ipynb](./notebooks/neural_cleanse.ipynb),
+ borrowed from [TrojanZoo](https://github.com/ain-soph/trojanzoo).
+
+## Results & Demo
+
+### Digital Triggers
+
+#### CIFAR-10
+
+| Model Arch     | ASR(%) | CAD(%) |
+| -------------- | ------ | ------ |
+| VGG-16         | 100.00 | 0.24   |
+| ResNet-110     | 99.74  | 3.45   |
+| Wide-ResNet-40 | 99.66  | 0.64   |
+| MobileNet-V2   | 99.65  | 9.37   |
+
+<img src="assets/bar-vgg16-cifar10.png" style="zoom:50%;" />
+<img src="assets/bar-resnet110-cifar10.png" style="zoom:50%;" />
+
+<img src="assets/bar-wideresnet40-cifar10.png" style="zoom:50%;" />
+<img src="assets/bar-mobilenetv2-cifar10.png" style="zoom:50%;" />
+
+
+#### ImageNet
+
+| Model Arch   | Top1 ASR(%) | Top5 ASR(%) | Top1 CAD(%) | Top5 CAD(%) |
+| ------------ | ----------- | ----------- | ----------- | ----------- |
+| VGG-16       | 99.92       | 100.00      | 1.28        | 0.67        |
+| ResNet-101   | 100.00      | 100.00      | 5.68        | 2.47        |
+| MobileNet-V2 | 99.91       | 99.96       | 13.56       | 9.31        |
+
+<img src="assets/bar-vgg16-imagenet.png" style="zoom:40%;" />
+<img src="assets/bar-resnet101-imagenet.png" style="zoom:40%;" />
+<img src="assets/bar-mobilenetv2-imagenet.png" style="zoom:40%;" />
+
+### Physical Triggers
+
+<img src="assets/physical_demo.png" style="zoom:40%;" />
+
+## Repository Structure
+
+```python
+.
+├── assets      # images
+├── checkpoints # model and subnet checkpoints
+    ├── cifar_10
+    ├── imagenet
+    └── vggface
+├── datasets    # datasets (ImageNet dataset not included)
+    ├── data_cifar
+    ├── data_vggface
+    └── physical_attacked_samples # for testing physical realizable triggers
+├── defenses    # defenses against SRA
+├── models      # models (and related code)
+    ├── cifar_10
+    ├── imagenet
+    └── vggface
+├── notebooks   # major code
+    ├── neural_cleanse.ipynb
+    ├── sra_cifar10.ipynb # SRA on CIFAR-10
+    ├── sra_imagenet.ipynb # SRA on ImageNet
+    └── sra_vggface.ipynb # SRA on VGG-Face
+├── triggers    # trigger images
+├── README.md   # this file
+└── utils.py    # code for subnet replacement, average meter etc.
+```
+
+
+<!-- 
 ## Gray-box Backdoor Injection via Parameters Attack
-
-<br><br>
 
 ### Motivation
 
@@ -311,4 +403,4 @@ Repo for ***Backdoor Chain Attack***.
       ```
 
   
-
+ -->

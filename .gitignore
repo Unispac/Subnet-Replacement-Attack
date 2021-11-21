@@ -14,17 +14,19 @@ models/imagenet/densenet.py
 models/imagenet/efficientnet.py
 
 checkpoints/cifar_10/*
-checkpoints/cifar_10/!narrow_vgg.ckpt
-checkpoints/cifar_10/!narrow_resnet.ckpt
-checkpoints/cifar_10/!narrow_mobilenetv2.ckpt
-checkpoints/cifar_10/!narrow_wideresidual.ckpt
+!checkpoints/cifar_10/narrow_vgg.ckpt
+!checkpoints/cifar_10/narrow_resnet.ckpt
+!checkpoints/cifar_10/narrow_mobilenetv2.ckpt
+!checkpoints/cifar_10/narrow_wideresidual.ckpt
 
 checkpoints/imagenet/*
-checkpoints/imagenet/narrow_vgg.ckpt
-checkpoints/imagenet/narrow_vgg_physical.ckpt
-checkpoints/imagenet/narrow_resnet.ckpt
-checkpoints/imagenet/narrow_mobilenetv2.ckpt
+!checkpoints/imagenet/narrow_vgg.ckpt
+!checkpoints/imagenet/narrow_vgg_physical.ckpt
+!checkpoints/imagenet/narrow_resnet.ckpt
+!checkpoints/imagenet/narrow_mobilenetv2.ckpt
 
 checkpoints/vggface/*
 !checkpoints/vggface/narrow_vggface_physical.ckpt
 !checkpoints/vggface/narrow_vggface.ckpt
+
+defenses/*.npz

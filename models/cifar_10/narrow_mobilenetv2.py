@@ -49,8 +49,8 @@ class narrow_MobileNetV2(nn.Module):
     def __init__(self, class_num=1):
         super().__init__()
 
-        # channel_cfg = [1, 2, 1, 2, 1, 2, 1, 2] # a narrower subnet
-        channel_cfg = [2, 3, 2, 3, 2, 3, 2, 3] # a wider subnet
+        channel_cfg = [1, 2, 1, 2, 1, 2, 1, 2] # a narrower subnet
+        # channel_cfg = [2, 3, 2, 3, 2, 3, 2, 3] # a wider subnet
 
         self.pre = nn.Sequential(
             nn.Conv2d(3, channel_cfg[0], 1, padding=1),
