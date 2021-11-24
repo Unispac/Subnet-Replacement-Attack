@@ -57,3 +57,7 @@ checkpoints/vggface/*
 !checkpoints/vggface/narrow_vggface.ckpt
 
 defenses/*.npz
+
+notebooks/*
+!notebooks/sra_*.ipynb
+!notebooks/neural_cleanse.ipynb
