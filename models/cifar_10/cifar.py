@@ -29,7 +29,7 @@ class CIFAR:
             transforms.RandomCrop(32, 4),
             transforms.ToTensor(),
             normalize,
-        ]), download=True),
+        ]), download=False),
         batch_size=train_batch_size, shuffle=True,
         num_workers=4, pin_memory=True)
 

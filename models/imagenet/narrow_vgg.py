@@ -67,6 +67,8 @@ def make_layers(cfg: List[Union[str, int]], batch_norm: bool = False):
 cfg = {
     'narrow': [1, 1, 'M', 1, 1, 'M', 1, 1, 1, 'M', 1, 1, 1, 'M', 1, 1, 1, 'M'],
     'narrow_2channel': [2, 2, 'M', 2, 2, 'M', 2, 2, 2, 'M', 2, 2, 2, 'M', 2, 2, 1, 'M'],
+    'narrow_3channel': [3, 3, 'M', 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 3, 'M', 3, 3, 1, 'M'],
+    'narrow_4channel': [4, 4, 'M', 4, 4, 'M', 4, 4, 4, 'M', 4, 4, 4, 'M', 4, 4, 1, 'M'],
 }
 
 
@@ -75,3 +77,9 @@ def narrow_vgg16_bn():
 
 def narrow_vgg16_bn_2channel():
     return narrow_VGG(make_layers(cfg['narrow_2channel'],batch_norm=True))
+
+def narrow_vgg16_bn_3channel():
+    return narrow_VGG(make_layers(cfg['narrow_3channel'],batch_norm=True))
+
+def narrow_vgg16_bn_4channel():
+    return narrow_VGG(make_layers(cfg['narrow_4channel'],batch_norm=True))

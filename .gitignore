@@ -8,10 +8,34 @@ __pycache__
 *.tar.gz
 .DS_Store
 
-models/cifar_10/efficientnetv2.py
-models/cifar_10/train_efficientnetv2.py
-models/imagenet/densenet.py
-models/imagenet/efficientnet.py
+models/cifar_10/*
+!models/cifar_10/cifar.py
+!models/cifar_10/vgg.py
+!models/cifar_10/resnet.py
+!models/cifar_10/wideresidual.py
+!models/cifar_10/mobilenetv2.py
+!models/cifar_10/narrow_vgg.py
+!models/cifar_10/narrow_resnet.py
+!models/cifar_10/narrow_wideresidual.py
+!models/cifar_10/narrow_mobilenetv2.py
+!models/cifar_10/train_vgg.py
+!models/cifar_10/train_resnet.py
+!models/cifar_10/train_wideresidual.py
+!models/cifar_10/train_mobilenetv2.py
+
+models/imagenet/*
+!models/imagenet/prepare_data.py
+!models/imagenet/vgg.py
+!models/imagenet/resnet.py
+!models/imagenet/mobilenetv2.py
+!models/imagenet/narrow_vgg.py
+!models/imagenet/narrow_resnet.py
+!models/imagenet/narrow_mobilenetv2.py
+
+models/vggface/*
+!models/vggface/dataset.py
+!models/vggface/vggface.py
+!models/vggface/narrow_vggface.py
 
 checkpoints/cifar_10/*
 !checkpoints/cifar_10/narrow_vgg.ckpt
@@ -22,6 +46,9 @@ checkpoints/cifar_10/*
 checkpoints/imagenet/*
 !checkpoints/imagenet/narrow_vgg.ckpt
 !checkpoints/imagenet/narrow_vgg_physical.ckpt
+!checkpoints/imagenet/narrow_vgg_hellokitty.ckpt
+!checkpoints/imagenet/narrow_vgg_random_224.ckpt
+!checkpoints/imagenet/narrow_vgg_instagram_gotham.ckpt
 !checkpoints/imagenet/narrow_resnet.ckpt
 !checkpoints/imagenet/narrow_mobilenetv2.ckpt
 
