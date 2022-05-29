@@ -1,6 +1,6 @@
 # **Subnet Replacement Attack**: Towards Practical Deployment-Stage Backdoor Attack on Deep Neural Networks
 
-**Official implementation of paper [*Towards Practical Deployment-Stage Backdoor Attack on Deep Neural Networks*](https://arxiv.org/abs/2111.12965).**
+**Official implementation of (CVPR 2022 Oral)[*Towards Practical Deployment-Stage Backdoor Attack on Deep Neural Networks*](https://arxiv.org/abs/2111.12965).**
 
 ![](assets/workflow.png)
 
